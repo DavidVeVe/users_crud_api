@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 // const id = Joi.string().uuid();
-const id = Joi.string().guid();
+const id = Joi.string().min(5);
 const balance = Joi.string();
 const picture = Joi.string();
 const age = Joi.number().integer();

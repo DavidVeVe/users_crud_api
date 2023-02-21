@@ -14,22 +14,22 @@ function UsersService() {
   this.collection = USERS_COLLECTION;
 
   async function find() {
-      const users = await this.mongo.getAll(this.collection);
-      return users;
+    const users = await this.mongo.getAll(this.collection);
+    return users;
   }
 
-    async function findOne(id) {
-      const user = this.users.find((user) => user.id === +id);
-      if (!user) {
-        throw boom.notFound("Product not found");
-      }
-
-      return {
-        message: "retrieved successfully",
-        statusCode: 200,
-        data: user
-      };
+  async function findOne(id) {
+    const foundUser = await this.mongo.getOne(this.collection, id);
+    console.log(foundUser);
+    if (!foundUser) {
+      throw boom.notFound("Product not found");
     }
+
+    return {
+      message: "retrieved successfully",
+      data: foundUser
+    };
+  }
 
   async function create(newUserData) {
     const newUserId = await this.mongo.create(this.collection, newUserData);
@@ -37,14 +37,12 @@ function UsersService() {
   }
 
   async function update(id, data) {
-    const userIndex = this.users.findIndex((user) => user.id === +id);
-    if (userIndex === -1) {
+    const updatedUserId = await this.mongo.update(this.collection, id, data)
+    if (!updatedUserId) {
       throw boom.notFound("Product not found");
     }
-
-    const newData = { ...this.users[userIndex], ...data };
-    this.users[userIndex] = newData;
-    return newData;
+    
+    return updatedUserId;
   }
 
   async function deleteUser(id) {
