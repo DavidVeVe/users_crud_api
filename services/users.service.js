@@ -1,87 +1,47 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
+// const { MongoClient, ServerApiVersion } = require('mongodb');
 const boom = require("@hapi/boom");
-const uri =
-  "mongodb+srv://DavidVelazquez1:xc7f6Ah13IyE@zerocopylabs.n3meosi.mongodb.net/?retryWrites=true&w=majority";
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverApi: ServerApiVersion.v1
-});
+const MongoLib = require("../lib/mongo");
 
-const DB_NAME = "zero_copy_users";
-const USERS_COLLECTION = "users";
-
-// const mockData = [
-//   {
-//     id: 0,
-//     name: 'David',
-//     age: 30,
-//     hobbies: ['playing the guitar, swimming, playing soccer'],
-//     isBlocked: false,
-//   },
-//   {
-//     id: 1,
-//     name: 'Renata',
-//     age: 1,
-//     hobbies: [
-//       'watching tv, playing with my feet, try to put everything in my mouth',
-//     ],
-//     isBlocked: false,
-//   },
-//   {
-//     id: 2,
-//     name: 'Camila',
-//     age: 20,
-//     hobbies: ['watching movies, wearing different makups, playing cards'],
-//     isBlocked: false
-//   },
-//   {
-//     id: 3,
-//     name: 'Rumildo',
-//     age: 25,
-//     hobbies: [],
-//     isBlocked: true
-//   },
-// ];
+const USERS_COLLECTION = 'users';
 
 function UsersService() {
-  this.users = [];
+  this.mongo = new MongoLib();
   this.create = create;
   this.find = find;
   this.findOne = findOne;
   this.update = update;
   this.deleteUser = deleteUser;
+  this.collection = USERS_COLLECTION
 
   async function find() {
-    return this.users;
-  }
-
-  async function findOne(id) {
-    const user = this.users.find((user) => user.id === +id);
-    if (!user) {
-      throw boom.notFound("Product not found");
-    }
-
-    return {
-      message: "retrieved successfully",
-      statusCode: 200,
-      data: user
-    };
-  }
-
-  async function create(newUser) {
     try {
-      await client.connect();
-      const result = await client
-        .db(DB_NAME)
-        .collection(USERS_COLLECTION)
-        .insertOne(newUser);
-
-      return result.insertedId;
+        const users = await this.mongo.getAll(this.collection)
+        return users;
     } catch (error) {
-      console.log(error);
-    } finally {
-      await client.close();
+        return error
+    }
+  }
+
+//   async function findOne(id) {
+//     const user = this.users.find((user) => user.id === +id);
+//     if (!user) {
+//       throw boom.notFound("Product not found");
+//     }
+
+//     return {
+//       message: "retrieved successfully",
+//       statusCode: 200,
+//       data: user
+//     };
+//   }
+
+  async function create(newUserData) {
+    try {
+      const newUserId = await this.mongo.create(this.collection, newUserData)
+      console.log(newUserId)
+      return newUserId;
+    } catch (error) {
+        return error
     }
   }
 

@@ -1,18 +1,20 @@
-const express = require('express');
-const cors = require('cors')
-const routerApi = require('./routes');
-const { logErrors, errorHandler, boomErrorHandler } = require('./middlewares/error.handler');
-const App = express();
+const express = require("express");
+const cors = require("cors");
+const routerApi = require("./routes");
+const {
+  logErrors,
+  errorHandler,
+  boomErrorHandler
+} = require("./middlewares/error.handler");
+const app = express();
 const port = 3000;
 
-App.use(cors())
-App.use(express.json());
-routerApi(App);
+app.use(cors());
+app.use(express.json());
+routerApi(app);
 
-App.use(logErrors);
-App.use(boomErrorHandler);
-App.use(errorHandler);
+app.use(logErrors);
+app.use(boomErrorHandler);
+app.use(errorHandler);
 
-App.listen(port, () => {
-  console.log(`This is running on port ${port}`);
-});
+app.listen(port, () => console.log(`Server is running on port ${port}`));
