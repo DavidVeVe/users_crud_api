@@ -8,12 +8,14 @@ const hobbies = Joi.array();
 
 const createUserSchema = Joi.object({
   name: name.required(),
-  age: age.required(),
+  age: age,
+  hobbies: hobbies
 });
 
 const updateUserSchema = Joi.object({
   name: name,
   age: age,
+  hobbies: hobbies
 });
 
 const getUserSchema = Joi.object({

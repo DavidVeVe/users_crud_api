@@ -1,74 +1,71 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const boom = require('@hapi/boom');
+const { MongoClient, ServerApiVersion } = require("mongodb");
+const boom = require("@hapi/boom");
 const uri =
-  'mongodb+srv://DavidVelazquez1:xc7f6Ah13IyE@zerocopylabs.n3meosi.mongodb.net/?retryWrites=true&w=majority';
+  "mongodb+srv://DavidVelazquez1:xc7f6Ah13IyE@zerocopylabs.n3meosi.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  serverApi: ServerApiVersion.v1,
+  serverApi: ServerApiVersion.v1
 });
 
-const DB_NAME = 'zero_copy_users';
-const USERS_COLLECTION = 'users';
+const DB_NAME = "zero_copy_users";
+const USERS_COLLECTION = "users";
 
-const mockData = [
-  {
-    id: 0,
-    name: 'David',
-    age: 30,
-    hobbies: ['playing the guitar, swimming, playing soccer'],
-    isBlocked: false,
-  },
-  {
-    id: 1,
-    name: 'Renata',
-    age: 1,
-    hobbies: [
-      'watching tv, playing with my feet, try to put everything in my mouth',
-    ],
-    isBlocked: false,
-  },
-  {
-    id: 2,
-    name: 'Camila',
-    age: 20,
-    hobbies: ['watching movies, wearing different makups, playing cards'],
-    isBlocked: false
-  },
-  {
-    id: 3,
-    name: 'Rumildo',
-    age: 25,
-    hobbies: [],
-    isBlocked: true
-  },
-];
+// const mockData = [
+//   {
+//     id: 0,
+//     name: 'David',
+//     age: 30,
+//     hobbies: ['playing the guitar, swimming, playing soccer'],
+//     isBlocked: false,
+//   },
+//   {
+//     id: 1,
+//     name: 'Renata',
+//     age: 1,
+//     hobbies: [
+//       'watching tv, playing with my feet, try to put everything in my mouth',
+//     ],
+//     isBlocked: false,
+//   },
+//   {
+//     id: 2,
+//     name: 'Camila',
+//     age: 20,
+//     hobbies: ['watching movies, wearing different makups, playing cards'],
+//     isBlocked: false
+//   },
+//   {
+//     id: 3,
+//     name: 'Rumildo',
+//     age: 25,
+//     hobbies: [],
+//     isBlocked: true
+//   },
+// ];
 
 function UsersService() {
-  this.users = mockData;
+  this.users = [];
   this.create = create;
   this.find = find;
   this.findOne = findOne;
   this.update = update;
   this.deleteUser = deleteUser;
 
-   async function find() {
+  async function find() {
     return this.users;
   }
 
   async function findOne(id) {
     const user = this.users.find((user) => user.id === +id);
-    if(!user) {
-      throw boom.notFound('Product not found')
-    }
-    if(user.isBlocked) {
-      throw boom.conflict('User is blocked')
+    if (!user) {
+      throw boom.notFound("Product not found");
     }
 
     return {
-      message: 'retrieved successfully',
+      message: "retrieved successfully",
       statusCode: 200,
-      data: user,
+      data: user
     };
   }
 
@@ -82,7 +79,7 @@ function UsersService() {
 
       return result.insertedId;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     } finally {
       await client.close();
     }
@@ -91,7 +88,7 @@ function UsersService() {
   async function update(id, data) {
     const userIndex = this.users.findIndex((user) => user.id === +id);
     if (userIndex === -1) {
-      throw boom.notFound('Product not found')
+      throw boom.notFound("Product not found");
     }
 
     const newData = { ...this.users[userIndex], ...data };
@@ -102,7 +99,7 @@ function UsersService() {
   async function deleteUser(id) {
     const userIndex = this.users.findIndex((user) => user.id === +id);
     if (userIndex === -1) {
-      throw boom.notFound('Product not found')
+      throw boom.notFound("Product not found");
     }
 
     return this.users.splice(userIndex, 1);
