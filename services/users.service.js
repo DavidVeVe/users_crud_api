@@ -10,7 +10,7 @@ function UsersService() {
   this.find = find;
   this.findOne = findOne;
   this.update = update;
-  this.deleteUser = deleteUser;
+//   this.deleteUser = deleteUser;
   this.collection = USERS_COLLECTION;
 
   async function find() {
@@ -41,18 +41,18 @@ function UsersService() {
     if (!updatedUserId) {
       throw boom.notFound("Product not found");
     }
-    
+
     return updatedUserId;
   }
 
-  async function deleteUser(id) {
-    const userIndex = this.users.findIndex((user) => user.id === +id);
-    if (userIndex === -1) {
-      throw boom.notFound("Product not found");
-    }
+//   async function deleteUser(id) {
+//     const userIndex = this.users.findIndex((user) => user.id === +id);
+//     if (userIndex === -1) {
+//       throw boom.notFound("Product not found");
+//     }
 
-    return this.users.splice(userIndex, 1);
-  }
+//     return this.users.splice(userIndex, 1);
+//   }
 }
 
 module.exports = UsersService;

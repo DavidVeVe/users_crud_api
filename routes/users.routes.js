@@ -66,13 +66,13 @@ router.patch(
   }
 );
 
-router.delete('/:id', async (req, res) => {
-  const { id } = req.params;
-  const deletedUser = await service.deleteUser(id);
-  res.json({
-    message: 'deleted',
-    data: deletedUser,
-  });
-});
+// router.delete('/:id', async (req, res) => {
+//   const { id } = req.params;
+//   const deletedUser = await service.deleteUser(id);
+//   res.json({
+//     message: 'deleted',
+//     data: deletedUser,
+//   });
+// });
 
 module.exports = router;
