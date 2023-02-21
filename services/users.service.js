@@ -2,7 +2,7 @@
 const boom = require("@hapi/boom");
 const MongoLib = require("../lib/mongo");
 
-const USERS_COLLECTION = 'users';
+const USERS_COLLECTION = "users";
 
 function UsersService() {
   this.mongo = new MongoLib();
@@ -11,38 +11,29 @@ function UsersService() {
   this.findOne = findOne;
   this.update = update;
   this.deleteUser = deleteUser;
-  this.collection = USERS_COLLECTION
+  this.collection = USERS_COLLECTION;
 
   async function find() {
-    try {
-        const users = await this.mongo.getAll(this.collection)
-        return users;
-    } catch (error) {
-        return error
-    }
+      const users = await this.mongo.getAll(this.collection);
+      return users;
   }
 
-//   async function findOne(id) {
-//     const user = this.users.find((user) => user.id === +id);
-//     if (!user) {
-//       throw boom.notFound("Product not found");
-//     }
+    async function findOne(id) {
+      const user = this.users.find((user) => user.id === +id);
+      if (!user) {
+        throw boom.notFound("Product not found");
+      }
 
-//     return {
-//       message: "retrieved successfully",
-//       statusCode: 200,
-//       data: user
-//     };
-//   }
+      return {
+        message: "retrieved successfully",
+        statusCode: 200,
+        data: user
+      };
+    }
 
   async function create(newUserData) {
-    try {
-      const newUserId = await this.mongo.create(this.collection, newUserData)
-      console.log(newUserId)
-      return newUserId;
-    } catch (error) {
-        return error
-    }
+    const newUserId = await this.mongo.create(this.collection, newUserData);
+    return newUserId;
   }
 
   async function update(id, data) {
