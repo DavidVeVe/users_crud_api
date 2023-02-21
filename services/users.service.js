@@ -1,4 +1,16 @@
-const boom = require('@hapi/boom')
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const boom = require('@hapi/boom');
+const uri =
+  'mongodb+srv://DavidVelazquez1:xc7f6Ah13IyE@zerocopylabs.n3meosi.mongodb.net/?retryWrites=true&w=majority';
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverApi: ServerApiVersion.v1,
+});
+
+const DB_NAME = 'zero_copy_users';
+const USERS_COLLECTION = 'users';
+
 const mockData = [
   {
     id: 0,
@@ -60,9 +72,20 @@ function UsersService() {
     };
   }
 
-  async function create(data) {
-    this.users.push(data);
-    return this.users;
+  async function create(newUser) {
+    try {
+      await client.connect();
+      const result = await client
+        .db(DB_NAME)
+        .collection(USERS_COLLECTION)
+        .insertOne(newUser);
+
+      return result.insertedId;
+    } catch (error) {
+      console.log(error)
+    } finally {
+      await client.close();
+    }
   }
 
   async function update(id, data) {
