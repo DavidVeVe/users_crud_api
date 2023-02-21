@@ -23,7 +23,7 @@ function UsersService() {
   async function findOne(id) {
     const foundUser = await this.mongo.getOne(this.collection, id);
     if (!foundUser) {
-      throw boom.notFound("Product not found");
+      throw boom.notFound("User not found");
     }
 
     return {
@@ -53,7 +53,7 @@ function UsersService() {
   async function update(id, data) {
     const updatedUserId = await this.mongo.update(this.collection, id, data);
     if (!updatedUserId) {
-      throw boom.notFound("Product not found");
+      throw boom.notFound("User not found");
     }
 
     return updatedUserId;
