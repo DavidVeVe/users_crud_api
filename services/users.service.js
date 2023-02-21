@@ -1,5 +1,6 @@
 // const { MongoClient, ServerApiVersion } = require('mongodb');
 const boom = require("@hapi/boom");
+const bcrypt = require("bcryptjs");
 const MongoLib = require("../lib/mongo");
 
 const USERS_COLLECTION = "users";
@@ -10,8 +11,9 @@ function UsersService() {
   this.find = find;
   this.findOne = findOne;
   this.update = update;
-//   this.deleteUser = deleteUser;
+  //   this.deleteUser = deleteUser;
   this.collection = USERS_COLLECTION;
+  this.findByEmail = findByEmail;
 
   async function find() {
     const users = await this.mongo.getAll(this.collection);
@@ -20,7 +22,6 @@ function UsersService() {
 
   async function findOne(id) {
     const foundUser = await this.mongo.getOne(this.collection, id);
-    console.log(foundUser);
     if (!foundUser) {
       throw boom.notFound("Product not found");
     }
@@ -31,13 +32,26 @@ function UsersService() {
     };
   }
 
-  async function create(newUserData) {
-    const newUserId = await this.mongo.create(this.collection, newUserData);
+  async function findByEmail(email) {
+    const foundUser = await this.mongo.getOneByEmail(this.collection, email);
+    if (!foundUser) {
+      throw boom.notFound("Email or password do not match ");
+    }
+
+    return foundUser;
+  }
+
+  async function create(data) {
+    const hash = await bcrypt.hash(data.password, 10);
+    const newUserId = await this.mongo.create(this.collection, {
+      ...data,
+      password: hash
+    });
     return newUserId;
   }
 
   async function update(id, data) {
-    const updatedUserId = await this.mongo.update(this.collection, id, data)
+    const updatedUserId = await this.mongo.update(this.collection, id, data);
     if (!updatedUserId) {
       throw boom.notFound("Product not found");
     }
@@ -45,14 +59,14 @@ function UsersService() {
     return updatedUserId;
   }
 
-//   async function deleteUser(id) {
-//     const userIndex = this.users.findIndex((user) => user.id === +id);
-//     if (userIndex === -1) {
-//       throw boom.notFound("Product not found");
-//     }
+  //   async function deleteUser(id) {
+  //     const userIndex = this.users.findIndex((user) => user.id === +id);
+  //     if (userIndex === -1) {
+  //       throw boom.notFound("Product not found");
+  //     }
 
-//     return this.users.splice(userIndex, 1);
-//   }
+  //     return this.users.splice(userIndex, 1);
+  //   }
 }
 
 module.exports = UsersService;

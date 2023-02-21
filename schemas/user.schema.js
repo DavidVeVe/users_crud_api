@@ -15,6 +15,7 @@ const email = Joi.string().email();
 const password = Joi.string().min(8).max(15);
 const phone = Joi.string().min(10);
 const address = Joi.string();
+const role = Joi.string().min(4);
 
 const allFields = {
   balance,
@@ -31,12 +32,12 @@ const allFields = {
 
 const createUserSchema = Joi.object({
   ...allFields,
-  name: name.required(),
   email: email.required(),
-  password: password.required()
+  password: password.required(),
+  role: role.required
 });
 
-const updateUserSchema = Joi.object(allFields);
+const updateUserSchema = Joi.object({...allFields});
 
 const getUserSchema = Joi.object({
   id: id.required()
