@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport')
 const validatorHandler = require('../middlewares/validator.handler');
 const {
   createUserSchema,
@@ -49,11 +50,13 @@ router.post(
 
 router.patch(
   '/:id',
+  passport.authenticate("jwt", { session: false }),
   validatorHandler(getUserSchema, 'params'),
   validatorHandler(updateUserSchema, 'body'),
   async (req, res, next) => {
     try {
       const { params, body } = req;
+      console.log(req)
       const updatedUser = await service.update(params.id, body);
 
       res.json({
@@ -61,6 +64,7 @@ router.patch(
         data: updatedUser,
       });
     } catch (error) {
+      console.log(error)
       next(error);
     }
   }

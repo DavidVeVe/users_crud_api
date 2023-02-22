@@ -52,6 +52,7 @@ function UsersService() {
 
   async function update(id, data) {
     const updatedUserId = await this.mongo.update(this.collection, id, data);
+    // console.log(updatedUserId);
     if (!updatedUserId) {
       throw boom.notFound("User not found");
     }

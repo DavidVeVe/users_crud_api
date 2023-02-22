@@ -6,7 +6,7 @@ function checkApiKey(req, res, next) {
   if (apiKey === config.apiKey) {
     next();
   } else {
-    next(boom.unauthorized());
+    next(boom.unauthorized("Please provide a valid api key"));
   }
 }
 
