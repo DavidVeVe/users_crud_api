@@ -33,13 +33,23 @@ const allFields = {
 const createUserSchema = Joi.object({
   ...allFields,
   email: email.required(),
-  password: password.required(),
+  password: password.required()
 });
 
-const updateUserSchema = Joi.object({...allFields});
+const updateUserSchema = Joi.object({ ...allFields });
 
 const getUserSchema = Joi.object({
   id: id.required()
 });
 
-module.exports = { createUserSchema, updateUserSchema, getUserSchema };
+const logInSchema = Joi.object({
+  email: email.required(),
+  password: password.required()
+});
+
+module.exports = {
+  createUserSchema,
+  updateUserSchema,
+  getUserSchema,
+  logInSchema
+};

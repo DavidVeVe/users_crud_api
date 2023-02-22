@@ -2,7 +2,7 @@ const express = require("express");
 const boom = require("@hapi/boom");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const { createUserSchema } = require("../schemas/user.schema");
+const { createUserSchema, logInSchema } = require("../schemas/user.schema");
 const validatorHandler = require("../middlewares/validator.handler");
 const UsersService = require("../services/users.service");
 
@@ -13,9 +13,9 @@ const router = express.Router();
 
 router.post(
   "/login",
+  validatorHandler(logInSchema, "body"),
   passport.authenticate("local", { session: false }),
   async (req, res, next) => {
-    console.log("entered");
     try {
       const { user } = req;
       console.log(user);
