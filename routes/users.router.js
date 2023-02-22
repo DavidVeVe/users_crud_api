@@ -1,25 +1,31 @@
-const express = require('express');
-const passport = require('passport')
-const validatorHandler = require('../middlewares/validator.handler');
+const express = require("express");
+const passport = require("passport");
+const validatorHandler = require("../middlewares/validator.handler");
 const {
   createUserSchema,
   updateUserSchema,
-  getUserSchema,
-} = require('../schemas/user.schema');
+  getUserSchema
+} = require("../schemas/user.schema");
 
 const router = express.Router();
 
-const UsersService = require('../services/users.service');
+const UsersService = require("../services/users.service");
 const service = new UsersService();
 
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   const users = await service.find();
-  res.json(users);
+
+  const usersWithoutPsswd = users.map((user) => {
+    delete user.password;
+    return user;
+  });
+
+  res.json(usersWithoutPsswd);
 });
 
 router.get(
-  '/:id',
-  validatorHandler(getUserSchema, 'params'),
+  "/:id",
+  validatorHandler(getUserSchema, "params"),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -27,7 +33,7 @@ router.get(
 
       res.status(200).json({
         message,
-        data,
+        data
       });
     } catch (error) {
       next(error);
@@ -36,34 +42,34 @@ router.get(
 );
 
 router.post(
-  '/',
-  validatorHandler(createUserSchema, 'body'),
+  "/",
+  validatorHandler(createUserSchema, "body"),
   async (req, res) => {
     const data = await service.create(req.body);
 
     res.status(201).json({
-      message: 'created',
-      data,
+      message: "created",
+      data
     });
   }
 );
 
 router.patch(
-  '/:id',
+  "/:id",
   passport.authenticate("jwt", { session: false }),
-  validatorHandler(getUserSchema, 'params'),
-  validatorHandler(updateUserSchema, 'body'),
+  validatorHandler(getUserSchema, "params"),
+  validatorHandler(updateUserSchema, "body"),
   async (req, res, next) => {
     try {
       const { params, body } = req;
       const updatedUser = await service.update(params.id, body);
 
       res.json({
-        message: 'updated',
-        data: updatedUser,
+        message: "updated",
+        data: updatedUser
       });
     } catch (error) {
-      console.log(error)
+      console.log(error);
       next(error);
     }
   }
