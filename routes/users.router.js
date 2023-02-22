@@ -56,7 +56,6 @@ router.patch(
   async (req, res, next) => {
     try {
       const { params, body } = req;
-      console.log(req)
       const updatedUser = await service.update(params.id, body);
 
       res.json({
