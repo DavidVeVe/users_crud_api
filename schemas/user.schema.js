@@ -11,8 +11,8 @@ const name = Joi.object({
   last: Joi.string().min(3)
 });
 const company = Joi.string();
-const email = Joi.string().email();
-const password = Joi.string().min(8).max(15);
+const email = Joi.string().email().min(5);
+const password = Joi.string().min(8);
 const phone = Joi.string().min(10);
 const address = Joi.string();
 const role = Joi.string().min(4);

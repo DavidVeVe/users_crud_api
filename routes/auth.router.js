@@ -15,8 +15,10 @@ router.post(
   "/login",
   passport.authenticate("local", { session: false }),
   async (req, res, next) => {
+    console.log("entered");
     try {
       const { user } = req;
+      console.log(user);
       const payload = {
         sub: user.id,
         role: user.role
@@ -39,7 +41,7 @@ router.post(
 
       if (!isNewUser) {
         const createdUserId = await service.create(req.body);
-        
+
         const payload = {
           sub: createdUserId
         };

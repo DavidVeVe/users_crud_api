@@ -11,20 +11,21 @@ const LocalStrategy = new Strategy(
     passwordField: "password"
   },
   async (email, password, done) => {
-    const notAuthorized = () => done(boom.unauthorized(), false);
+    const notAuthorized = () =>
+      done(boom.unauthorized("Email and password don not match"), false);
     try {
       const user = await service.findByEmail(email);
       if (!user) {
         notAuthorized();
-      }
-
-      const isMatch = await bcrypt.compare(password, user.password);
-
-      if (!isMatch) {
-        notAuthorized();
       } else {
-        delete user.password;
-        return done(null, user);
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (!isMatch) {
+          notAuthorized();
+        } else {
+          delete user.password;
+          return done(null, user);
+        }
       }
     } catch (error) {
       done(error, false);
