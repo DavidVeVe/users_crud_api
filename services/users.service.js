@@ -25,6 +25,8 @@ function UsersService() {
       throw boom.notFound("User not found");
     }
 
+    delete foundUser.password
+
     return {
       message: "retrieved successfully",
       data: foundUser
