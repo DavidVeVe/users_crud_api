@@ -1,11 +1,7 @@
 const express = require("express");
 const passport = require("passport");
 const validatorHandler = require("../middlewares/validator.handler");
-const {
-  createUserSchema,
-  updateUserSchema,
-  getUserSchema
-} = require("../schemas/user.schema");
+const { updateUserSchema, getUserSchema } = require("../schemas/user.schema");
 
 const router = express.Router();
 
@@ -41,19 +37,6 @@ router.get(
   }
 );
 
-router.post(
-  "/",
-  validatorHandler(createUserSchema, "body"),
-  async (req, res) => {
-    const data = await service.create(req.body);
-
-    res.status(201).json({
-      message: "created",
-      data
-    });
-  }
-);
-
 router.patch(
   "/:id",
   passport.authenticate("jwt", { session: false }),
@@ -74,14 +57,5 @@ router.patch(
     }
   }
 );
-
-// router.delete('/:id', async (req, res) => {
-//   const { id } = req.params;
-//   const deletedUser = await service.deleteUser(id);
-//   res.json({
-//     message: 'deleted',
-//     data: deletedUser,
-//   });
-// });
 
 module.exports = router;

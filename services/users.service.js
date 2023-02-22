@@ -11,7 +11,6 @@ function UsersService() {
   this.find = find;
   this.findOne = findOne;
   this.update = update;
-  //   this.deleteUser = deleteUser;
   this.collection = USERS_COLLECTION;
   this.findByEmail = findByEmail;
 
@@ -34,10 +33,6 @@ function UsersService() {
 
   async function findByEmail(email) {
     const foundUser = await this.mongo.getOneByEmail(this.collection, email);
-    if (!foundUser) {
-      throw boom.notFound("Email or password do not match ");
-    }
-
     return foundUser;
   }
 
@@ -52,22 +47,12 @@ function UsersService() {
 
   async function update(id, data) {
     const updatedUserId = await this.mongo.update(this.collection, id, data);
-    // console.log(updatedUserId);
     if (!updatedUserId) {
       throw boom.notFound("User not found");
     }
 
     return updatedUserId;
   }
-
-  //   async function deleteUser(id) {
-  //     const userIndex = this.users.findIndex((user) => user.id === +id);
-  //     if (userIndex === -1) {
-  //       throw boom.notFound("Product not found");
-  //     }
-
-  //     return this.users.splice(userIndex, 1);
-  //   }
 }
 
 module.exports = UsersService;
