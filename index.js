@@ -20,4 +20,4 @@ app.use(logErrors);
 app.use(boomErrorHandler);
 app.use(errorHandler);
 
-app.listen(port, () => console.log(`Server is running on port ${port}`));
+app.listen('https://users-crud-api.vercel.app/', () => console.log(`Server is running on port ${port}`));
