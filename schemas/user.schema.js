@@ -27,7 +27,7 @@ const allFields = {
   email,
   password,
   phone,
-  address
+  address,
 };
 
 const createUserSchema = Joi.object({
