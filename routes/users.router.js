@@ -8,19 +8,24 @@ const router = express.Router();
 const UsersService = require("../services/users.service");
 const service = new UsersService();
 
-router.get("/", async (req, res) => {
-  const users = await service.find();
+router.get(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    const users = await service.find();
 
-  const usersWithoutPsswd = users.map((user) => {
-    delete user.password;
-    return user;
-  });
+    const usersWithoutPsswd = users.map((user) => {
+      delete user.password;
+      return user;
+    });
 
-  res.json(usersWithoutPsswd);
-});
+    res.json(usersWithoutPsswd);
+  }
+);
 
 router.get(
   "/:id",
+  passport.authenticate("jwt", { session: false }),
   validatorHandler(getUserSchema, "params"),
   async (req, res, next) => {
     try {
