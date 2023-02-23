@@ -53,7 +53,7 @@ router.patch(
       const updatedUser = await service.update(params.id, body);
 
       res.json({
-        message: "updated",
+        message: "Successfully updated",
         data: updatedUser
       });
     } catch (error) {
